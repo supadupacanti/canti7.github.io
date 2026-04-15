@@ -9,66 +9,50 @@
   :root {
     --ink: #1a1008; --parchment: #f5edd6; --parchment-dark: #e8d9b5; --parchment-deeper: #d4c090;
     --sepia: #8b5e3c; --sepia-light: #c49a6c; --crimson: #8b1a1a; --gold: #c9920a;
-    --gold-light: #e8b84b; --shadow: rgba(26,16,8,0.25); --teal-dark: #1a4a4a;
-    --correct: #2d5a2d; --wrong: #8b1a1a;
+    --gold-light: #e8b84b; --shadow: rgba(26,16,8,0.25); --correct: #2d5a2d; --wrong: #8b1a1a;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Crimson Pro', serif; background: var(--parchment); color: var(--ink); min-height: 100vh; background-image: radial-gradient(ellipse at 10% 10%, rgba(139,94,60,0.06) 0%, transparent 50%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+  body { font-family: 'Crimson Pro', serif; background: var(--parchment); color: var(--ink); min-height: 100vh; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+  
   .screen { display: none; min-height: 100vh; padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
   .screen.active { display: flex; }
   .panel { background: var(--parchment); border: 1px solid var(--parchment-deeper); border-radius: 4px; padding: 2rem; box-shadow: 0 4px 24px var(--shadow); position: relative; max-width: 520px; width: 100%; text-align: center; }
-  .panel::before { content: ''; position: absolute; inset: 6px; border: 1px solid var(--parchment-deeper); pointer-events: none; }
-  .btn { font-family: 'Special Elite', monospace; padding: 1rem; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; width: 100%; margin-bottom: 0.8rem; transition: 0.2s; }
+  
+  .btn { font-family: 'Special Elite', monospace; padding: 1rem; border: none; cursor: pointer; text-transform: uppercase; width: 100%; margin-bottom: 0.8rem; transition: 0.2s; }
   .btn-primary { background: var(--ink); color: var(--parchment); box-shadow: 3px 3px 0 var(--sepia); }
   .btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--parchment-deeper); }
-
-  .input-group { margin-bottom: 1.2rem; width: 100%; text-align: left; }
-  .input-group label { display: block; font-family: 'Special Elite', monospace; font-size: 0.75rem; color: var(--sepia); margin-bottom: 0.5rem; }
-  .input-group input { width: 100%; padding: 0.8rem; background: var(--parchment-dark); border: 1px solid var(--parchment-deeper); font-size: 1rem; }
-
-  /* New Character Selection Layout */
+  
+  /* Character Grid */
   .char-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 1.5rem 0; }
-  .char-card { border: 2px solid transparent; padding: 10px; cursor: pointer; border-radius: 4px; transition: 0.3s; background: var(--parchment-dark); text-align: center; }
-  .char-card:hover { background: var(--parchment-deeper); }
+  .char-card { border: 2px solid transparent; padding: 10px; cursor: pointer; border-radius: 4px; background: var(--parchment-dark); transition: 0.2s; }
   .char-card.selected { border-color: var(--gold); background: var(--parchment-deeper); transform: scale(1.05); }
-  .char-avatar-wrapper { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #1a1008; background: #fff; margin: 0 auto 5px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
-  .char-avatar-wrapper img { width: 90%; height: auto; display: block; object-fit: cover; }
-  .char-name { font-size: 0.75rem; font-family: 'Special Elite', monospace; color: #1a1008; letter-spacing: 0.05em; }
+  .char-emoji { font-size: 2rem; display: block; }
+  
+  /* Waiting Overlay */
+  .waiting-overlay { position: fixed; inset: 0; background: rgba(26,16,8,0.9); color: white; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; text-align: center; }
+  .waiting-overlay.active { display: flex; }
 
-  /* Room UI */
-  .room-code-value { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--gold); letter-spacing: 5px; margin: 10px 0; }
   .player-list { list-style: none; margin: 1.5rem 0; width: 100%; text-align: left; }
-  .player-list li { padding: 8px 15px; border-bottom: 1px solid var(--parchment-dark); display: flex; align-items: center; gap: 15px; }
-  .list-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--ink); background: #fff; }
-
-  /* Gameplay UI */
-  #game-screen { justify-content: flex-start; padding: 0; }
-  .game-header { background: var(--ink); color: var(--parchment); width: 100%; padding: 1rem; display: flex; justify-content: space-between; border-bottom: 3px solid var(--gold); }
-  .timer-bar-wrap { height: 8px; background: var(--parchment-dark); width: 100%; }
-  .timer-bar { height: 100%; background: var(--gold); width: 100%; transition: width 1s linear; }
-  .answer-btn { width: 100%; padding: 1.2rem; margin-bottom: 10px; border: 1.5px solid var(--parchment-deeper); background: var(--parchment); cursor: pointer; text-align: left; font-size: 1.1rem; }
+  .player-list li { padding: 12px; border-bottom: 1px solid var(--parchment-dark); display: flex; justify-content: space-between; align-items: center; }
+  
+  .game-header { background: var(--ink); color: var(--parchment); width: 100%; padding: 1rem; display: flex; justify-content: space-between; border-bottom: 3px solid var(--gold); position: fixed; top:0; z-index: 5; }
+  .timer-bar { height: 8px; background: var(--gold); width: 100%; transition: width 1s linear; position: fixed; top: 55px; }
+  
+  .answer-btn { width: 100%; padding: 1.2rem; margin-bottom: 10px; border: 1.5px solid var(--parchment-deeper); background: var(--parchment); cursor: pointer; text-align: left; font-size: 1.1rem; font-family: 'Crimson Pro', serif; }
   .answer-btn.correct { background: #d4edda !important; border-color: var(--correct) !important; }
   .answer-btn.wrong { background: #f8d7da !important; border-color: var(--wrong) !important; }
-  
-  /* Waiting Overlay (Kahoot style) */
-  .waiting-overlay { position: fixed; inset: 0; background: rgba(26,16,8,0.95); color: white; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; text-align: center; padding: 2rem; }
-  .waiting-overlay.active { display: flex; }
-  .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 1rem; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<div id="kahoot-wait" class="waiting-overlay">
-  <div class="spinner"></div>
-  <h2 style="font-family:'Playfair Display'; font-size: 2.5rem;">Answer Dispatch Received</h2>
-  <p style="font-family:'Special Elite'; margin-top: 10px; color: var(--gold-light);">Waiting for other historians to finish...</p>
+<div id="wait-overlay" class="waiting-overlay">
+  <h2 style="font-family:'Playfair Display'; font-size: 2.5rem;">Answer Received</h2>
+  <p style="font-family:'Special Elite'; margin-top: 10px; color: var(--gold-light);">Waiting for other players to finish...</p>
 </div>
 
 <div id="home-screen" class="screen active">
   <div class="panel">
-    <h1 style="font-family:'Playfair Display'; font-size: 3rem;">Historica</h1>
-    <p style="margin-bottom: 2rem; font-family:'Special Elite'; color:var(--sepia);">AGE OF INDUSTRY · MULTIPLAYER</p>
+    <h1 style="font-family:'Playfair Display'; font-size: 3.5rem;">Historica</h1>
     <button class="btn btn-primary" onclick="showScreen('host-setup-screen')">Host Game</button>
     <button class="btn btn-secondary" onclick="showScreen('join-screen')">Join Game</button>
   </div>
@@ -76,54 +60,39 @@
 
 <div id="host-setup-screen" class="screen">
   <div class="panel">
-    <h2>Host Setup</h2>
-    <div class="input-group"><label>Your Name</label><input type="text" id="host-name-input" placeholder="e.g. Professor Hawthorne"></div>
+    <h2>Host Settings</h2>
+    <input type="text" id="host-name-input" placeholder="Your Name" style="width:100%; padding:10px; margin: 15px 0;">
+    
+    <label style="display:block; text-align:left; font-family:'Special Elite'; font-size:0.8rem;">Time Limit (Seconds)</label>
+    <input type="number" id="time-limit-input" value="15" min="5" max="60" style="width:100%; padding:10px; margin-bottom:20px;">
+    
     <button class="btn btn-primary" onclick="createRoom()">Create Room</button>
   </div>
 </div>
 
 <div id="join-screen" class="screen">
   <div class="panel">
-    <h2>Join Session</h2>
+    <h2>Join Game</h2>
     <input type="text" id="join-name-input" placeholder="Your Name" style="width:100%; padding:10px; margin: 10px 0;">
     <input type="text" id="join-code-input" placeholder="Room Code" style="width:100%; padding:10px; margin-bottom: 10px; text-transform:uppercase;">
     
-    <p style="font-family:'Special Elite'; font-size:0.7rem; color:var(--sepia); margin-top:1rem;">Select Your Persona</p>
-    <div class="char-grid" id="char-grid">
-      <div class="char-card" id="c_lincoln" onclick="selectChar('c_lincoln')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50 10 L30 40 L35 70 L65 70 L70 40 Z' fill='%23666'/%3E%3Cpath d='M35 70 Q 50 110 65 70 Z' fill='%23666'/%3E%3Cpath d='M30 10 L70 10 L70 18 L30 18 Z' fill='%23111'/%3E%3Cellipse cx='50' cy='40' rx='18' ry='22' fill='%23e0c0a0'/%3E%3Crect x='45' y='50' width='10' height='22' fill='%23111'/%3E%3Cpath d='M42 58 Q 50 65 58 58 Z' fill='%23111'/%3E%3Cellipse cx='45' cy='35' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='55' cy='35' rx='3' ry='2' fill='%23fff'/%3E%3Cpath d='M47 43 Q 50 48 53 43 Z' fill='%23666'/%3E%3C/svg%3E" alt="Lincoln"></div>
-        <span class="char-name">Lincoln</span>
-      </div>
-      <div class="char-card" id="c_victoria" onclick="selectChar('c_victoria')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cellipse cx='50' cy='50' rx='20' ry='24' fill='%23f0d0b0'/%3E%3Cpath d='M30 50 Q 50 80 70 50 Z' fill='%23f0d0b0'/%3E%3Crect x='30' y='65' width='40' height='30' fill='%23eee' rx='5'/%3E%3Cpath d='M30 65 L20 85 L80 85 L70 65 Z' fill='%23eee'/%3E%3Cpath d='M40 30 L60 30 L60 40 L40 40 Z' fill='%23555'/%3E%3Cellipse cx='40' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='60' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cpath d='M47 30 L53 30 L50 20 Z' fill='%23da2' stroke='%23da2' stroke-width='3'/%3E%3Cpath d='M35 15 L65 15 L65 25 L35 25 Z' fill='%23111'/%3E%3C/svg%3E" alt="Victoria"></div>
-        <span class="char-name">Victoria</span>
-      </div>
-      <div class="char-card" id="c_bismarck" onclick="selectChar('c_bismarck')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cellipse cx='50' cy='45' rx='22' ry='26' fill='%23e0c0a0'/%3E%3Crect x='28' y='65' width='44' height='30' fill='%23444'/%3E%3Cpath d='M25 65 L75 65 L60 85 L40 85 Z' fill='%23444'/%3E%3Crect x='38' y='52' width='24' height='10' rx='5' fill='%23111'/%3E%3Cellipse cx='44' cy='40' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='56' cy='40' rx='3' ry='2' fill='%23fff'/%3E%3Cpath d='M30 15 L70 15 L60 30 L40 30 Z' fill='%23333'/%3E%3Cpath d='M50 15 L50 8 L50 15 Z' fill='%23333' stroke='%23da2' stroke-width='5'/%3E%3C/svg%3E" alt="Bismarck"></div>
-        <span class="char-name">Bismarck</span>
-      </div>
-      <div class="char-card" id="c_wright" onclick="selectChar('c_wright')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cellipse cx='50' cy='50' rx='20' ry='24' fill='%23e0c0a0'/%3E%3Cpath d='M30 25 L70 25 L65 40 L35 40 Z' fill='%23333'/%3E%3Cellipse cx='40' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='60' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Crect x='30' y='60' width='40' height='35' fill='%23666' rx='5'/%3E%3Cpath d='M20 75 L80 75 Z' fill='%23666' stroke='%23da2' stroke-width='2'/%3E%3Cpath d='M35 15 L65 15 L65 25 L35 25 Z' fill='%23111'/%3E%3C/svg%3E" alt="Wright"></div>
-        <span class="char-name">Wright</span>
-      </div>
-      <div class="char-card" id="c_edison" onclick="selectChar('c_edison')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M35 30 Q 50 60 65 30' fill='none' stroke='%23da2' stroke-width='4'/%3E%3Cellipse cx='50' cy='50' rx='20' ry='24' fill='%23f0d0b0'/%3E%3Cellipse cx='40' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='60' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Crect x='30' y='60' width='40' height='35' fill='%23444' rx='5'/%3E%3Crect x='48' y='65' width='4' height='20' fill='%23da2'/%3E%3Cpath d='M35 15 L65 15 L65 25 L35 25 Z' fill='%23111'/%3E%3C/svg%3E" alt="Edison"></div>
-        <span class="char-name">Edison</span>
-      </div>
-      <div class="char-card" id="c_curie" onclick="selectChar('c_curie')">
-        <div class="char-avatar-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cellipse cx='50' cy='50' rx='20' ry='24' fill='%23f0d0b0'/%3E%3Cpath d='M30 65 Q 50 100 70 65 Z' fill='%23da2' stroke='%23333'/%3E%3Crect x='30' y='65' width='40' height='35' fill='%23111' rx='5'/%3E%3Cellipse cx='40' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cellipse cx='60' cy='45' rx='3' ry='2' fill='%23fff'/%3E%3Cpath d='M35 15 L65 15 L65 25 L35 25 Z' fill='%23111'/%3E%3Cellipse cx='50' cy='30' rx='10' ry='10' fill='%23fff' stroke='%23666' stroke-width='2'/%3E%3Crect x='48' y='28' width='4' height='10' fill='%23333'/%3E%3C/svg%3E" alt="Curie"></div>
-        <span class="char-name">Curie</span>
-      </div>
+    <p style="font-family:'Special Elite'; font-size:0.7rem;">Choose Your Persona</p>
+    <div class="char-grid">
+      <div class="char-card" onclick="selectChar(this, '🎩')"><span class="char-emoji">🎩</span></div>
+      <div class="char-card" onclick="selectChar(this, '💡')"><span class="char-emoji">💡</span></div>
+      <div class="char-card" onclick="selectChar(this, '👑')"><span class="char-emoji">👑</span></div>
+      <div class="char-card" onclick="selectChar(this, '🧪')"><span class="char-emoji">🧪</span></div>
+      <div class="char-card" onclick="selectChar(this, '🎨')"><span class="char-emoji">🎨</span></div>
+      <div class="char-card" onclick="selectChar(this, '✈️')"><span class="char-emoji">✈️</span></div>
     </div>
-
-    <button class="btn btn-primary" onclick="joinRoom()">Enter Chamber</button>
+    <button class="btn btn-primary" onclick="joinRoom()">Join</button>
   </div>
 </div>
 
 <div id="lobby-screen" class="screen">
   <div class="panel">
     <p>ROOM CODE</p>
-    <div class="room-code-value" id="display-room-code">----</div>
+    <h1 id="display-room-code" style="letter-spacing:5px; color:var(--gold); font-size:3rem;">----</h1>
     <ul id="player-list" class="player-list"></ul>
     <button id="start-btn" class="btn btn-primary" style="display:none;" onclick="startGame()">Commence</button>
     <p id="wait-msg">Waiting for host...</p>
@@ -132,22 +101,22 @@
 
 <div id="game-screen" class="screen">
   <div class="game-header">
-    <div id="q-count">Q 1/13</div>
+    <div id="q-count-display">Q 1/10</div>
     <div id="my-score-display">0 pts</div>
   </div>
-  <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
-  <div style="max-width:600px; width:100%; padding:2rem;">
-    <p id="q-text" style="font-size:1.6rem; font-weight:bold; margin-bottom:2rem; font-family:'Playfair Display'; text-align:center;"></p>
+  <div id="timer-bar" class="timer-bar"></div>
+  <div style="max-width:600px; width:100%; padding:2rem; margin-top:60px;">
+    <p id="q-text" style="font-size:1.6rem; font-weight:bold; text-align:center; margin-bottom:2rem;"></p>
     <div id="answers-grid"></div>
   </div>
 </div>
 
 <div id="leaderboard-screen" class="screen">
   <div class="panel">
-    <h2 style="font-family:'Playfair Display'; margin-bottom: 1rem;">Leaderboard</h2>
+    <h2>Standings</h2>
     <ul id="lb-list" class="player-list"></ul>
     <button id="next-btn" class="btn btn-primary" style="display:none;" onclick="nextQuestion()">Next Question</button>
-    <p id="p-wait-next" style="display:none;">Waiting for next dispatch...</p>
+    <p id="p-wait-next" style="display:none;">Wait for host...</p>
   </div>
 </div>
 
@@ -155,7 +124,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  // Using your specific Firebase credentials
+  // Citing configuration from provided Firebase document
   const firebaseConfig = {
     apiKey: "AIzaSyDW-UE-a4TMRcfz3E13mLOgBtx6bywwCtE",
     authDomain: "history-780ec.firebaseapp.com",
@@ -170,57 +139,49 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  const QUESTIONS = [
+  const BANK = [
     { q: "Which Commodore forced Japan to open ports in 1853?", a: ["Matthew Perry", "John Jones", "David Farragut", "Winfield Scott"], c: 0 },
     { q: "What was Darwin's 1859 work on evolution?", a: ["On the Origin of Species", "The Descent of Man", "Geology", "The Voyage"], c: 0 },
     { q: "Which fort's bombardment began the Civil War?", a: ["Fort Sumter", "Fort McHenry", "Fort Knox", "Fort Lee"], c: 0 },
-    { q: "Who assassinated Abraham Lincoln?", a: ["John Wilkes Booth", "Lee Oswald", "Charles Guiteau", "Leon Czolgosz"], c: 0 },
     { q: "Who developed the practical light bulb in 1879?", a: ["Thomas Edison", "Nikola Tesla", "Humphry Davy", "Joseph Swan"], c: 0 },
-    { q: "What year was the First Transcontinental Railroad completed?", a: ["1869", "1875", "1855", "1890"], c: 0 },
-    { q: "Who invented the telephone in 1876?", a: ["Alexander Graham Bell", "Edison", "Tesla", "Elisha Gray"], c: 0 },
     { q: "The Statue of Liberty was a gift from which country?", a: ["France", "Great Britain", "Germany", "Italy"], c: 0 },
-    { q: "Where were the first modern Olympic Games held (1896)?", a: ["Athens", "Paris", "London", "Rome"], c: 0 },
     { q: "Who made the first powered flight in 1903?", a: ["Wright Brothers", "Blériot", "Langley", "Curtiss"], c: 0 }
   ];
 
-  let state = {
-    isHost: false,
-    myId: 'p' + Math.random().toString(16).slice(2, 7),
-    roomCode: '',
-    currentQIndex: -1,
-    myScore: 0,
-    questions: [],
-    selectedCharacterSVG: '' // Stores the SVG data of the image
+  let state = { 
+    isHost: false, 
+    myId: 'p'+Math.random().toString(36).slice(2, 7), 
+    roomCode: '', 
+    currentQIndex: -1, 
+    myScore: 0, 
+    questions: [], 
+    myEmoji: '👤',
+    timeLimit: 15
   };
 
-  // Helper to extract the SVG image data of the selected character card
-  window.selectChar = (cardId) => {
+  window.showScreen = (id) => { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); };
+
+  window.selectChar = (el, emoji) => {
     document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
-    const card = document.getElementById(cardId);
-    card.classList.add('selected');
-    state.selectedCharacterSVG = card.querySelector('img').src; // Capture image src (SVG data)
-  };
-
-  window.showScreen = (id) => {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    el.classList.add('selected');
+    state.myEmoji = emoji;
   };
 
   window.createRoom = async () => {
     const name = document.getElementById('host-name-input').value || 'Host';
+    state.timeLimit = parseInt(document.getElementById('time-limit-input').value) || 15;
     state.roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
     state.isHost = true;
+    const selected = [...BANK].sort(() => Math.random() - 0.5);
     
-    // Shuffle the 10 questions for this session
-    const randomizedQ = [...QUESTIONS].sort(() => Math.random() - 0.5);
-
-    await set(ref(db, 'rooms/' + state.roomCode), {
-      status: 'lobby',
-      currentQ: -1,
-      questions: randomizedQ,
-      players: { [state.myId]: { name, score: 0, emoji: '👑', answered: false } }
+    await set(ref(db, 'rooms/' + state.roomCode), { 
+      status: 'lobby', 
+      currentQ: -1, 
+      questions: selected, 
+      timeLimit: state.timeLimit,
+      players: { [state.myId]: { name, score: 0, emoji: '👑', answered: false } } 
     });
-
+    
     setupSync();
     document.getElementById('display-room-code').textContent = state.roomCode;
     document.getElementById('start-btn').style.display = 'block';
@@ -234,23 +195,12 @@
     const snap = await get(ref(db, `rooms/${code}`));
     if (snap.exists()) {
       state.roomCode = code;
-      
-      // If no image was selected, default to the basic placeholder avatar
-      if(!state.selectedCharacterSVG) {
-          state.selectedCharacterSVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cellipse cx='50' cy='50' rx='20' ry='24' fill='%23666'/%3E%3Crect x='30' y='65' width='40' height='30' fill='%23111' rx='5'/%3E%3C/svg%3E";
-      }
-
-      await set(ref(db, `rooms/${code}/players/${state.myId}`), { 
-          name, 
-          score: 0, 
-          emoji: state.selectedCharacterSVG, // Store the SVG string in Firebase
-          answered: false 
-      });
-      
+      state.timeLimit = snap.val().timeLimit || 15;
+      await update(ref(db, `rooms/${code}/players/${state.myId}`), { name, score: 0, emoji: state.myEmoji, answered: false });
       setupSync();
       document.getElementById('display-room-code').textContent = code;
       showScreen('lobby-screen');
-    } else { alert("Chamber not found!"); }
+    } else { alert("Room not found!"); }
   };
 
   function setupSync() {
@@ -259,39 +209,26 @@
       if (!room) return;
       state.questions = room.questions;
       
-      const playerArray = Object.values(room.players || {});
-      const sortedPlayers = playerArray.sort((a, b) => b.score - a.score);
-      
-      // Render player lists with images
-      const listHtml = sortedPlayers.map(p => `
-          <li>
-              <div class="char-avatar-wrapper list-avatar"><img src="${p.emoji}" alt="${p.name}"></div>
-              ${p.name}
-              <span>${p.score} pts</span>
-          </li>
-      `).join('');
+      const sortedPlayers = Object.values(room.players || {}).sort((a, b) => b.score - a.score);
+      const listHtml = sortedPlayers.map(p => `<li><span>${p.emoji} ${p.name}</span> <span>${p.score} pts</span></li>`).join('');
       document.getElementById('player-list').innerHTML = listHtml;
       document.getElementById('lb-list').innerHTML = listHtml;
 
-      // System Flow Controllers
       if (room.status === 'question' && state.currentQIndex !== room.currentQ) {
         state.currentQIndex = room.currentQ;
-        // Hide Kahoot overlay when new question loads
-        document.getElementById('kahoot-wait').classList.remove('active');
+        document.getElementById('wait-overlay').classList.remove('active');
         renderQuestion();
       } else if (room.status === 'leaderboard') {
-        document.getElementById('kahoot-wait').classList.remove('active');
+        document.getElementById('wait-overlay').classList.remove('active');
         showScreen('leaderboard-screen');
         if (state.isHost) document.getElementById('next-btn').style.display = 'block';
         else document.getElementById('p-wait-next').style.display = 'block';
       }
 
-      // Sync Host logic: If everyone in the database is answered: true, automatically advance to leaderboard
+      // Automatically move to leaderboard if everyone is done
       if (state.isHost && room.status === 'question') {
-        const allAnswered = Object.values(room.players).every(p => p.answered === true);
-        if (allAnswered) {
-          setTimeout(() => update(ref(db, `rooms/${state.roomCode}`), { status: 'leaderboard' }), 2000);
-        }
+        const allDone = Object.values(room.players).every(p => p.answered);
+        if (allDone) setTimeout(() => update(ref(db, `rooms/${state.roomCode}`), { status: 'leaderboard' }), 1000);
       }
     });
   }
@@ -300,55 +237,52 @@
 
   function renderQuestion() {
     const qData = state.questions[state.currentQIndex];
-    const correctVal = qData.a[qData.c];
-    
-    // UI: Scramble answer order
-    const shuffledAns = [...qData.a].sort(() => Math.random() - 0.5);
-
-    document.getElementById('q-count').textContent = `Q ${state.currentQIndex + 1}/${state.questions.length}`;
-    document.getElementById('q-text').textContent = qData.q;
+    document.getElementById('q-count-display').innerText = `Q ${state.currentQIndex + 1}/${state.questions.length}`;
+    document.getElementById('q-text').innerText = qData.q;
     const grid = document.getElementById('answers-grid');
     grid.innerHTML = '';
     
-    shuffledAns.forEach(ans => {
+    // Scramble answers for the individual player
+    const shuffled = [...qData.a].map((val, idx) => ({ val, idx })).sort(() => Math.random() - 0.5);
+    
+    shuffled.forEach(item => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn';
-      btn.innerText = ans;
+      btn.innerText = item.val;
       btn.onclick = () => {
-        if (ans === correctVal) state.myScore += 100;
-        document.querySelectorAll('.answer-btn').forEach(b => { 
-            b.disabled = true; 
-            if(b.innerText === correctVal) b.classList.add('correct');
-            else if(b.innerText === ans) b.classList.add('wrong');
+        if (item.val === qData.a[qData.c]) state.myScore += 100;
+        document.querySelectorAll('.answer-btn').forEach(b => {
+          b.disabled = true;
+          if(b.innerText === qData.a[qData.c]) b.classList.add('correct');
+          else if(b.innerText === item.val) b.classList.add('wrong');
         });
-        
         update(ref(db, `rooms/${state.roomCode}/players/${state.myId}`), { answered: true, score: state.myScore });
         document.getElementById('my-score-display').innerText = `${state.myScore} pts`;
         
-        // Kahoot Waiting Logic: Lock screen and wait for Firebase sync to change the status
+        // Kahoot waiting screen
         setTimeout(() => {
-            if (document.getElementById('game-screen').classList.contains('active')) {
-                document.getElementById('kahoot-wait').classList.add('active');
-            }
-        }, 1500);
+          if (document.getElementById('game-screen').classList.contains('active')) {
+            document.getElementById('wait-overlay').classList.add('active');
+          }
+        }, 1200);
       };
       grid.appendChild(btn);
     });
-    
+
     const bar = document.getElementById('timer-bar');
     bar.style.transition = 'none'; bar.style.width = '100%';
-    setTimeout(() => { bar.style.transition = 'width 15s linear'; bar.style.width = '0%'; }, 100);
-    showScreen('game-screen');
+    setTimeout(() => { 
+      bar.style.transition = `width ${state.timeLimit}s linear`; 
+      bar.style.width = '0%'; 
+    }, 100);
   }
 
   window.nextQuestion = async () => {
     const next = state.currentQIndex + 1;
-    if (next >= state.questions.length) { alert("Game Over!"); return; }
-    
+    if (next >= state.questions.length) { alert("Session concluded!"); return; }
     const snap = await get(ref(db, `rooms/${state.roomCode}/players`));
     const players = snap.val();
     for (let id in players) players[id].answered = false;
-    
     update(ref(db, `rooms/${state.roomCode}`), { status: 'question', currentQ: next, players: players });
   };
 </script>
